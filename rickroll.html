@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="rickroll.css">
+    <title>Rickroll</title>
+</head>
+
+<body>
+    <h1>Solve the math puzzle to disable Rick!</h1>
+    <p>Tips: see + as - | see * as divide !</p>
+    <form id="mathQuiz">
+        <label for="q1">5 + 3 = </label>
+        <input type="text" id="q1" name="q1"><br><br>
+
+        <label for="q2">10 - 4 = </label>
+        <input type="text" id="q2" name="q2"><br><br>
+
+        <label for="q3">6 * 2 = </label>
+        <input type="text" id="q3" name="q3"><br><br>
+
+        <button type="button" onclick="checkAnswers()">Submit</button>
+    </form>
+    <p id="result"></p>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    <script>
+        function checkAnswers() {
+            const q1 = document.getElementById('q1').value;
+            const q2 = document.getElementById('q2').value;
+            const q3 = document.getElementById('q3').value;
+            if (q1 == '2' && q2 == '14' && q3 == '3') {
+                document.getElementById('result').innerText = 'Correct!';
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('result').innerText = 'Incorrect, please try again!';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

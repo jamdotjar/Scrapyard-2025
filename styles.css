@@ -1,0 +1,169 @@
+/* Reset some default browser styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set base font and colors */
+body {
+    font-size: 40px;
+    line-height: 1.6;
+    color: #ffffff;
+    background-image: url('https://i.pinimg.com/236x/d3/e1/e4/d3e1e48032ad33175725a174da96e22b.jpg');
+    font-family: 'Comic Sans MS', 'Papyrus', cursive;
+    padding: 20px;
+}
+
+@keyframes moveAround {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(100px, 0);
+    }
+
+    50% {
+        transform: translate(100px, 100px);
+    }
+
+    75% {
+        transform: translate(0, 100px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+h1 {
+    font-size: 2.5rem;
+    animation: moveAround 5s infinite;
+}
+
+@keyframes shiver {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    20% {
+        transform: translate(-2px, 2px);
+    }
+
+    40% {
+        transform: translate(2px, -2px);
+    }
+
+    60% {
+        transform: translate(-2px, -2px);
+    }
+
+    80% {
+        transform: translate(2px, 2px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+#timer {
+    animation: shiver 0.2s infinite;
+}
+
+@keyframes evilAura {
+    0% {
+        box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
+    }
+
+    50% {
+        box-shadow: 0 0 10px darkred, 0 0 20px darkred, 0 0 30px darkred, 0 0 40px darkred;
+    }
+
+    100% {
+        box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
+    }
+}
+
+input[type="text"] {
+    animation: evilAura 2s infinite;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: 15px;
+    color: #222;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+/* Links */
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Buttons */
+button,
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover,
+.btn:hover {
+    background: #0055aa;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Utilities */
+.text-center {
+    text-align: center;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.timer {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
