@@ -17,23 +17,24 @@ body {
 
 @keyframes moveAround {
     0% {
-        transform: translate(0, 0);
+        transform: translate(0, 0) rotate(0deg);
+        font-size: 2.5rem;
     }
 
     25% {
-        transform: translate(100px, 0);
+        transform: translate(50px, 20px) rotate(-80deg);
     }
 
     50% {
-        transform: translate(100px, 100px);
+        transform: translate(-20px, 20px) rotate(-10deg);
     }
 
     75% {
-        transform: translate(0, 100px);
+        transform: translate(40px, 40px) rotate(20deg);
     }
 
     100% {
-        transform: translate(0, 0);
+        transform: translate(0, 0) rotate(-30deg);
     }
 }
 
@@ -74,7 +75,7 @@ h1 {
 
 @keyframes evilAura {
     0% {
-        box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
+        box-shadow: 0 0 5px rgb(55, 4, 84), 0 0 10px rgb(3, 90, 13), 0 0 15px rgb(127, 151, 5), 0 0 20px red;
     }
 
     50% {
@@ -82,12 +83,68 @@ h1 {
     }
 
     100% {
-        box-shadow: 0 0 5px red, 0 0 10px red, 0 0 15px red, 0 0 20px red;
+        box-shadow: 0 0 5px rgb(105, 50, 1), 0 0 10px red, 0 0 15px red, 0 0 20px red;
     }
 }
 
 input[type="text"] {
     animation: evilAura 2s infinite;
+}
+
+@keyframes freezingEffect {
+    0% {
+        background: linear-gradient(45deg, #00f, #00f);
+        box-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 15px #00f, 0 0 20px #00f;
+    }
+
+    50% {
+        background: linear-gradient(45deg, #00f, #fff);
+        box-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 30px #00f, 0 0 40px #00f;
+    }
+
+    100% {
+        background: linear-gradient(45deg, #00f, #00f);
+        box-shadow: 0 0 5px #00f, 0 0 10px #00f, 0 0 15px #00f, 0 0 20px #00f;
+    }
+}
+
+button,
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(45deg, purple, transparent);
+    background-size: 200% 200%;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    animation: purpleFlames 3s infinite, freezingEffect 5s infinite;
+}
+
+button:hover,
+.btn:hover {
+    background: linear-gradient(45deg, purple, transparent);
+    background-size: 200% 200%;
+    animation: purpleFlames 1.5s infinite, freezingEffect 2.5s infinite;
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.flash {
+    animation: flash 1s infinite;
 }
 
 /* Typography */
@@ -98,7 +155,7 @@ h4,
 h5,
 h6 {
     margin-bottom: 15px;
-    color: #222;
+    color: #fefefe;
 }
 
 h1 {
@@ -121,24 +178,6 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-/* Buttons */
-button,
-.btn {
-    display: inline-block;
-    padding: 8px 16px;
-    background: #0066cc;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-button:hover,
-.btn:hover {
-    background: #0055aa;
 }
 
 /* Container */
@@ -166,4 +205,22 @@ button:hover,
     top: 20px;
     left: 20px;
     z-index: 100;
+}
+
+.site {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 20px;
+}
+
+.site>* {
+    all: unset;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    background-color: white;
+    color: #000000;
+    font-size: 15px;
 }

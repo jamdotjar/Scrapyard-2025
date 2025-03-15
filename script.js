@@ -1,8 +1,10 @@
-// Good chunks of this were taked from that one guy's code
+// config
 let namePrefix = "Pinecil";
-let updateInterval = 150; // update interval for polling
+let updateInterval = 100; // update interval for polling
 
 // vars
+const MAX_COUNTDOWN = 100;
+let countdown = MAX_COUNTDOWN;
 let live_temp = 0;
 let power_level = 0;
 let writingTempTrigger = false;
@@ -17,14 +19,25 @@ let log = console.log;
 
 // Values that previously came from UI
 let temp = 0;
-let spt = 0;
-let handle = 0;
-let dc = 0;
-let watt = 0;
-let max_watt = 0;
 let last_move = 0;
-let is_moving = false;
 
+function init() {
+
+    if (typeof navigator == 'undefined' || typeof navigator.bluetooth == 'undefined' || typeof navigator.bluetooth.requestDevice == 'undefined') {
+        return false;
+    }
+
+    BT_UUID_SVC_BULK_DATA = '9eae1000-9d0d-48c5-aa55-33e27f9bc533'; // bulk service
+    BT_UUID_CHAR_BLE_BULK_LIVE_DATA = '9eae1001-9d0d-48c5-aa55-33e27f9bc533'; // was BluetoothUUID.canonicalUUID(1);
+
+    BT_UUID_SVC_SETTINGS_DATA = 'f6d80000-5a10-4eba-aa55-33e27f9bc533'; // settings service
+    BT_UUID_CHAR_BLE_SETTINGS_VALUE_SAVE = 'f6d7ffff-5a10-4eba-aa55-33e27f9bc533'; // was BluetoothUUID.canonicalUUID("0xFFFF"); // write 1 to save settings
+    BT_UUID_CHAR_BLE_SETTINGS_VALUE_SETPOINT = 'f6d70000-5a10-4eba-aa55-33e27f9bc533'; // was BluetoothUUID.canonicalUUID(0); // setpoint temp setting
+
+    autoconnect = typeof navigator.bluetooth.getDevices != 'undefined'
+
+    return true;
+}
 
 function requestBluetoothDevice() {
     let services = [BT_UUID_SVC_BULK_DATA, BT_UUID_SVC_SETTINGS_DATA];
@@ -45,26 +58,10 @@ function requestBluetoothDevice() {
         });
 }
 
-function forgetBluetoothDevice(deviceId) {
-    return navigator.bluetooth.getDevices()
-        .then(devices => {
-            const device = devices.find((device) => device.id == deviceId);
-            if (!device) {
-                throw new Error('No Bluetooth device to forget');
-            }
-            log('Forgetting ' + device.name + 'Bluetooth device...');
-            return device.forget();
-        })
-        .then(() => {
-            log('  > Bluetooth device has been forgotten.');
-            populateBluetoothDevices();
-        })
-        .catch(error => {
-            log('Argh! ' + error);
-        });
-}
-
 function populateBluetoothDevices(tryToConnect) {
+    if (!autoconnect) {
+        return;
+    }
 
     log('Getting existing permitted Bluetooth devices...');
     return navigator.bluetooth.getDevices()
@@ -172,6 +169,8 @@ function writeTempValue(value) {
     }
 }
 
+
+
 function poll() {
     liveID = BT_UUID_SVC_BULK_DATA + BT_UUID_CHAR_BLE_BULK_LIVE_DATA;
 
@@ -197,51 +196,55 @@ function poll() {
                 };
                 */
                 // each item in the struct has 4 bytes (32 bits)
-                const uptime = value.getUint32(28, true); // Index 7 * 4 bytes
-                last_move = value.getUint32(32, true);    // Index 8 * 4 bytes
+                const uptime = value.getUint32(28, true);
+                last_move = value.getUint32(32, true);
 
                 temp = value.getUint32(0, true);
-                spt = value.getUint32(4, true);
                 handle = value.getUint32(12, true) / 10;
-                watt = Math.round(value.getUint32(52, true) / 10);
-                max_watt = Math.max(max_watt, watt);
-
-                // Calculate time since last movement
                 const timeSinceMove = uptime - last_move;
                 last_move = timeSinceMove;
             })
             .catch(function (error) {
                 console.log(error);
             });
-
-        if (last_move !== undefined) {
-            console.log(`Last movement: ${last_move} deciseconds ago`);
-        }
     }
 }
 
 setInterval(poll, updateInterval);
-setInterval(updateCountdown, updateInterval);
 
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', init);
+}
 
+// Initialize UI elements
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialize Bluetooth 
     if (!init()) {
-        alert('Web Bluetooth API not available. Please use a Chromium based browser');
-    }
-    else {
-        document.getElementById('connect').addEventListener('click', function () {
-            requestBluetoothDevice();
-        });
+        console.log('Web Bluetooth API not available. Please use Chrome or Edge on desktop or Android.');
+        document.getElementById('connect').disabled = true;
     }
 
-    setInterval(function () {
-        if (connected) {
-            document.getElementById('currentTemp').textContent = temp;
-            document.getElementById('power').textContent = watt;
-            document.getElementById('maxPower').textContent = max_watt;
-            document.getElementById('lastMove').textContent = last_move;
+    setInterval(
+        function () {
+            if (!connected) return;
+
+            if (last_move < 5) {
+                countdown = Math.min(MAX_COUNTDOWN, countdown + Math.random() * 0.01);
+
+            } else {
+                countdown = Math.max(0, countdown - 0.1);
+
+            }
+
+            const countdownElement = document.getElementById('timer');
+            if (countdownElement) {
+                countdownElement.textContent = countdown.toFixed(1);
+            }
         }
-    }, updateInterval);
+        , 10)
+
+    // Setup event listeners
+    document.getElementById('connect').addEventListener('click', requestBluetoothDevice);
 
     // Try autoconnect if available
     if (autoconnect) {
@@ -249,21 +252,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Countdown functionality
-const MAX_COUNTDOWN = 100;
-let countdown = MAX_COUNTDOWN;
 
-function updateCountdown() {
-    if (!connected) return;
-
-    if (last_move < 5) {
-        countdown = Math.min(MAX_COUNTDOWN, countdown + 5);
-    } else {
-        countdown = Math.max(0, countdown - 1);
-    }
-
-    const countdownElement = document.getElementById('timer');
-    if (countdownElement) {
-        countdownElement.textContent = countdown;
-    }
-}

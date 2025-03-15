@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Popups with Images</title>
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px solid #ccc;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .popup.active {
+            display: block;
+        }
+
+        .popup-header {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .popup-body {
+            margin-bottom: 10px;
+        }
+
+        .popup-footer {
+            text-align: right;
+        }
+
+        .popup img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="showPopup('popup1')">Show Popup 1</button>
+    <button onclick="showPopup('popup2')">Show Popup 2</button>
+    <button onclick="showPopup('popup3')">Show Popup 3</button>
+
+    <div id="popup1" class="popup">
+        <div class="popup-header">Popup 1</div>
+        <div class="popup-body">
+            <img src="popup1.png" alt="Image 1">
+        </div>
+        <div class="popup-footer">
+            <button onclick="hidePopup('popup1')">Close</button>
+        </div>
+    </div>
+
+    <div id="popup2" class="popup">
+        <div class="popup-header">Popup 2</div>
+        <div class="popup-body">
+            <img src="path/to/your/image2.jpg" alt="Image 2">
+        </div>
+        <div class="popup-footer">
+            <button onclick="hidePopup('popup2')">Close</button>
+        </div>
+    </div>
+
+    <div id="popup3" class="popup">
+        <div class="popup-header">Popup 3</div>
+        <div class="popup-body">
+            <img src="path/to/your/image3.jpg" alt="Image 3">
+        </div>
+        <div class="popup-footer">
+            <button onclick="hidePopup('popup3')">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function hidePopup(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>

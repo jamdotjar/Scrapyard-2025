@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const validUrl = url.startsWith('http') ? url : `https://${url}`;
 
             // Create a div to display the result if it doesn't exist
-            let resultDiv = document.getElementById('result');
+            let resultDiv = document.getElementById('site');
             if (!resultDiv) {
                 resultDiv = document.createElement('div');
-                resultDiv.id = 'result';
+                resultDiv.id = 'site';
                 document.body.appendChild(resultDiv);
             }
 
@@ -37,21 +37,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await response.text();
 
-            // Display the rendered HTML
+            // Create a temporary DOM to parse the fetched HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data, 'text/html');
+
+            // Update relative image sources to absolute URLs
+            const images = doc.querySelectorAll('img');
+            images.forEach(img => {
+                const src = img.getAttribute('src');
+                if (src && !src.startsWith('http')) {
+                    img.src = new URL(src, validUrl).href;
+                }
+            });
+
+            // Update relative stylesheet links to absolute URLs
+            const links = doc.querySelectorAll('link[rel="stylesheet"]');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && !href.startsWith('http')) {
+                    link.href = new URL(href, validUrl).href;
+                }
+            });
+
+            // Inject only the body content into the result div
             resultDiv.innerHTML = '';
-
-            // Create an iframe to display the rendered HTML
-            const iframe = document.createElement('iframe');
-            iframe.style.width = '100%';
-            iframe.style.height = '600px';
-            iframe.style.border = '1px solid #ddd';
-            resultDiv.appendChild(iframe);
-
-            // Write the HTML content to the iframe
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(data);
-            iframeDoc.close();
+            const bodyContent = doc.body.cloneNode(true);
+            resultDiv.appendChild(bodyContent);
 
         } catch (error) {
             console.error('Error fetching website:', error);
