@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinecil BLE Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .status-panel {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        #logOutput {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: monospace;
+            background-color: #f5f5f5;
+        }
+        .temp-control {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pinecil BLE Controller</h1>
+    
+    <div class="control-panel">
+        <button id="connectBtn">Connect to Pinecil</button>
+        <button id="disconnectBtn">Disconnect</button>
+        <button id="forgetBtn">Forget Device</button>
+        <button id="saveSettingsBtn">Save Settings to Flash</button>
+    </div>
+    
+    <div class="status-panel">
+        <div>Connection: <span id="connectionStatus">Disconnected</span></div>
+        <div>Current Temperature: <span id="currentTemp">--</span> °C</div>
+        <div>Setpoint: <span id="setpoint">--</span> °C</div>
+        <div>Power: <span id="power">--</span> W</div>
+        <div>Max Power: <span id="maxPower">--</span> W</div>
+    </div>
+    
+    <div class="temp-control">
+        <label for="tempInput">Set Temperature (°C):</label>
+        <input type="number" id="tempInput" min="50" max="450" value="320">
+        <button id="setTempBtn">Set Temperature</button>
+    </div>
+    
+    <h3>Log Output</h3>
+    <div id="logOutput"></div>
+    
+    <script src="script.js"></script>
+    <script>
+        // Override console.log to write to our log div
+        const originalLog = console.log;
+        console.log = function() {
+            const args = Array.from(arguments);
+            const logOutput = document.getElementById('logOutput');
+            logOutput.innerHTML += args.join(' ') + '<br>';
+            logOutput.scrollTop = logOutput.scrollHeight;
+            originalLog.apply(console, arguments);
+        };
+        
+        // Initialize UI elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bluetooth 
+            if (!init()) {
+                console.log('Web Bluetooth API not available. Please use Chrome or Edge on desktop or Android.');
+                document.getElementById('connectBtn').disabled = true;
+            }
+            
+            // UI update function
+            setInterval(function() {
+                if (connected) {
+                    document.getElementById('connectionStatus').textContent = 'Connected';
+                    document.getElementById('connectionStatus').style.color = 'green';
+                    document.getElementById('currentTemp').textContent = temp;
+                    document.getElementById('setpoint').textContent = spt;
+                    document.getElementById('power').textContent = watt;
+                    document.getElementById('maxPower').textContent = max_watt;
+                } else {
+                    document.getElementById('connectionStatus').textContent = 'Disconnected';
+                    document.getElementById('connectionStatus').style.color = 'red';
+                }
+            }, 1000);
+            
+            // Setup event listeners
+            document.getElementById('connectBtn').addEventListener('click', requestBluetoothDevice);
+            
+            document.getElementById('disconnectBtn').addEventListener('click', function() {
+                if (bluetoothDevice && bluetoothDevice.gatt.connected) {
+                    bluetoothDevice.gatt.disconnect();
+                    console.log('Disconnected from device');
+                }
+            });
+            
+            document.getElementById('forgetBtn').addEventListener('click', function() {
+                if (bluetoothDevice) {
+                    forgetBluetoothDevice(bluetoothDevice.id);
+                }
+            });
+            
+            document.getElementById('saveSettingsBtn').addEventListener('click', saveSettingsToFlash);
+            
+            document.getElementById('setTempBtn').addEventListener('click', function() {
+                const tempValue = parseInt(document.getElementById('tempInput').value);
+                if (tempValue >= 50 && tempValue <= 450) {
+                    writeTempValue(tempValue);
+                    console.log('Setting temperature to ' + tempValue + '°C');
+                } else {
+                    console.log('Temperature must be between 50°C and 450°C');
+                }
+            });
+            
+            // Try autoconnect if available
+            if (autoconnect) {
+                populateBluetoothDevices(true);
+            }
+        });
+        
+        // Define bluetoothDevice variable which is used but not declared in the script
+        let bluetoothDevice;
+    </script>
+</body>
+</html>
