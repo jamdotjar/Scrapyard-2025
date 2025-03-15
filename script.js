@@ -1,4 +1,3 @@
-// config
 let namePrefix = "Pinecil";
 let updateInterval = 100; // update interval for polling
 const popups = [
@@ -28,6 +27,7 @@ let persistentSettingsTrigger = false;
 let backoffTimeoutID;
 let populatedDevice;
 let cc = new Object();
+let disable = true;
 let log = console.log;
 
 // Values that previously came from UI
@@ -109,7 +109,8 @@ function connect() {
         },
         function success() {
             log('> Bluetooth Device connected.');
-
+            disable = false;
+            connected = true;
             bluetoothDevice.gatt.connect()
                 .then(function (server) {
                     server.getPrimaryService(BT_UUID_SVC_SETTINGS_DATA)
@@ -153,6 +154,7 @@ function connect() {
 function onDisconnected() {
     log('> Bluetooth Device disconnected');
     connected = false;
+    disable = true;
     connect();
 }
 
@@ -171,18 +173,6 @@ function exponentialBackoff(max, delay, toTry, success, fail) {
         });
 }
 
-function time(text) {
-    log('[' + new Date().toJSON().substr(11, 8) + '] ' + text);
-}
-
-function writeTempValue(value) {
-    if (value >= 50 || value <= 450) {
-        writingTempTrigger = true;
-        writingTempValue = value;
-    }
-}
-
-
 
 function poll() {
     liveID = BT_UUID_SVC_BULK_DATA + BT_UUID_CHAR_BLE_BULK_LIVE_DATA;
@@ -190,25 +180,7 @@ function poll() {
     if (connected && cc[liveID]) {
         cc[liveID].readValue()
             .then(value => {
-                /*
-                uint32_t bulkData[] = {
-                        TipThermoModel::getTipInC(),                                         // 0  - Current temp
-                        getSettingValue(SettingsOptions::SolderingTemp),                     // 1  - Setpoint
-                        getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0), // 2  - Input voltage
-                        getHandleTemperature(0),                                             // 3  - Handle X10 Temp in C
-                        X10WattsToPWM(x10WattHistory.average()),                             // 4  - Power as PWM level
-                        getPowerSrc(),                                                       // 5  - power src
-                        getTipResistanceX10(),                                               // 6  - Tip resistance
-                        xTaskGetTickCount() / TICKS_100MS,                                   // 7  - uptime in deciseconds
-                        lastMovementTime / TICKS_100MS,                                      // 8  - last movement time (deciseconds)
-                        TipThermoModel::getTipMaxInC(),                                      // 9  - max temp
-                        TipThermoModel::convertTipRawADCTouV(getTipRawTemp(0), true),        // 10 - Raw tip in μV
-                        abs(getRawHallEffect()),                                             // 11 - hall sensor
-                        currentMode,                                                         // 12 - Operating mode
-                        x10WattHistory.average(),                                            // 13 - Estimated Wattage *10
-                };
-                */
-                // each item in the struct has 4 bytes (32 bits)
+
                 const uptime = value.getUint32(28, true);
                 last_move = value.getUint32(32, true);
 
@@ -235,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!init()) {
         console.log('Web Bluetooth API not available. Please use Chrome or Edge on desktop or Android.');
         document.getElementById('connect').disabled = true;
+        disable = true;
     }
 
     setInterval(
@@ -315,4 +288,3 @@ function tempChange() {
         initialTemp = temp;
     }
 }
-

@@ -7,9 +7,9 @@
 
 /* Set base font and colors */
 body {
-    font-size: 40px;
+    font-size: 20px;
     line-height: 1.6;
-    color: #222222;
+    color: #000000;
     background-image: url('https://i.pinimg.com/236x/d3/e1/e4/d3e1e48032ad33175725a174da96e22b.jpg');
     font-family: 'Comic Sans MS', 'Papyrus', cursive;
     padding: 20px;
@@ -155,12 +155,12 @@ h4,
 h5,
 h6 {
     margin-bottom: 15px;
-    color: #fefefe;
+
 }
 
 h1 {
     font-size: 5rem;
-    color: #ffffff;
+
 }
 
 h2 {
@@ -227,9 +227,9 @@ a:hover {
 }
 
 .outline {
-    border: 3px solid black;
+    border: 3px solid rgba(0, 0, 0, 0);
     padding: 10px;
-    background-color: beige;
+    background-color: rgba(245, 245, 220, 0);
     padding: 10px;
     margin: 10px;
 }
@@ -238,4 +238,12 @@ a:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.outline {
+    border: 5px solid black;
+    padding: 20px;
+    background-color: beige;
+    padding: 10px;
+    margin: 10px;
 }
