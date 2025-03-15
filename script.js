@@ -9,6 +9,10 @@ const popups = [
     'popup5.png',
     'popup6.png',
     'popup7.png',
+    'popup8.jpg',
+    'popup9.png',
+    'popup10.png',
+    'popup11.jpg',
 ];
 
 // vars
