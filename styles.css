@@ -9,68 +9,65 @@
 body {
     font-size: 40px;
     line-height: 1.6;
-    color: #ffffff;
+    color: #222222;
     background-image: url('https://i.pinimg.com/236x/d3/e1/e4/d3e1e48032ad33175725a174da96e22b.jpg');
     font-family: 'Comic Sans MS', 'Papyrus', cursive;
     padding: 20px;
+    text-align: left;
+}
+
+input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100lh;
+    max-width: 300px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.inputs input {
+    width: 500px
+}
+
+.inputs button {
+    width: 100%;
+    margin-top: 10px;
 }
 
 @keyframes moveAround {
     0% {
         transform: translate(0, 0) rotate(0deg);
-        font-size: 2.5rem;
-    }
-
-    25% {
-        transform: translate(50px, 20px) rotate(-80deg);
     }
 
     50% {
-        transform: translate(-20px, 20px) rotate(-10deg);
+        transform: translate(-0px, 0px) rotate(-10deg);
     }
 
-    75% {
-        transform: translate(40px, 40px) rotate(20deg);
+    50% {
+        transform: translate(-0px, 0px) rotate(10deg);
     }
 
     100% {
-        transform: translate(0, 0) rotate(-30deg);
+        transform: translate(0, 0) rotate(0deg);
     }
 }
 
 h1 {
+    text-align: center;
     font-size: 2.5rem;
     animation: moveAround 5s infinite;
-}
-
-@keyframes shiver {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    20% {
-        transform: translate(-2px, 2px);
-    }
-
-    40% {
-        transform: translate(2px, -2px);
-    }
-
-    60% {
-        transform: translate(-2px, -2px);
-    }
-
-    80% {
-        transform: translate(2px, 2px);
-    }
-
-    100% {
-        transform: translate(0, 0);
-    }
-}
-
-#timer {
-    animation: shiver 0.2s infinite;
 }
 
 @keyframes evilAura {
@@ -79,16 +76,16 @@ h1 {
     }
 
     50% {
-        box-shadow: 0 0 10px darkred, 0 0 20px darkred, 0 0 30px darkred, 0 0 40px darkred;
+        box-shadow: 0 0 10px rgb(0, 0, 0), 0 0 20px rgb(139, 109, 109), 0 0 30px rgb(63, 10, 10), 0 0 40px darkred;
     }
 
     100% {
-        box-shadow: 0 0 5px rgb(105, 50, 1), 0 0 10px red, 0 0 15px red, 0 0 20px red;
+        box-shadow: 0 0 5px rgb(105, 50, 1), 0 0 10px rgb(143, 77, 77), 0 0 15px red, 0 0 20px rgb(51, 32, 32);
     }
 }
 
 input[type="text"] {
-    animation: evilAura 2s infinite;
+    animation: evilAura 10s infinite;
 }
 
 @keyframes freezingEffect {
@@ -120,6 +117,7 @@ button,
     cursor: pointer;
     font-size: 1rem;
     animation: purpleFlames 3s infinite, freezingEffect 5s infinite;
+    align-items: flex-start;
 }
 
 button:hover,
@@ -147,6 +145,8 @@ button:hover,
     animation: flash 1s infinite;
 }
 
+
+
 /* Typography */
 h1,
 h2,
@@ -159,7 +159,8 @@ h6 {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 5rem;
+    color: #ffffff;
 }
 
 h2 {
@@ -223,4 +224,18 @@ a:hover {
     background-color: white;
     color: #000000;
     font-size: 15px;
+}
+
+.outline {
+    border: 3px solid black;
+    padding: 10px;
+    background-color: beige;
+    padding: 10px;
+    margin: 10px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

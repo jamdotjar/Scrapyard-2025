@@ -2,6 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputField = document.getElementById('url');
     const getButton = document.getElementById('getSite');
 
+    const path = window.location.pathname.slice(1);
+    if (path) {
+        fetchWebsite(path);
+    }
+
     getButton.addEventListener('click', fetchWebsite);
 
     async function fetchWebsite() {

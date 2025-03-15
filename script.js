@@ -1,6 +1,15 @@
 // config
 let namePrefix = "Pinecil";
 let updateInterval = 100; // update interval for polling
+const popups = [
+    'popup1.png',
+    'popup2.png',
+    'popup3.png',
+    'popup4.png',
+    'popup5.png',
+    'popup6.png',
+    'popup7.png',
+];
 
 // vars
 const MAX_COUNTDOWN = 100;
@@ -227,21 +236,38 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(
         function () {
             if (!connected) return;
-
             if (last_move < 5) {
-                countdown = Math.min(MAX_COUNTDOWN, countdown + Math.random() * 0.01);
-
+                countdown = Math.min(MAX_COUNTDOWN, countdown + Math.random() * 0.05);
             } else {
                 countdown = Math.max(0, countdown - 0.1);
-
             }
 
             const countdownElement = document.getElementById('timer');
             if (countdownElement) {
+                if (last_move < 5) {
+                    countdownElement.style.left = '0px';
+                    countdownElement.style.top = '0px';
+                } else {
+                    countdownElement.style.position = 'relative';
+                    countdownElement.style.left = `${Math.random() * 10 - 5}px`;
+                    countdownElement.style.top = `${Math.random() * 10 - 5}px`;
+
+                }
                 countdownElement.textContent = countdown.toFixed(1);
+            }
+
+            const siteArea = document.getElementById('site');
+            if (siteArea) {
+                siteArea.style.opacity = countdown / MAX_COUNTDOWN;
             }
         }
         , 10)
+    setInterval(tempChange, 1000);
+
+    setInterval(() => {
+        showRandomPopup();
+    }, 15000);
+
 
     // Setup event listeners
     document.getElementById('connect').addEventListener('click', requestBluetoothDevice);
@@ -252,4 +278,37 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+
+let initialTemp = temp;
+let popupIntervalID;
+
+function showRandomPopup() {
+    const randomImage = popups[Math.floor(Math.random() * popups.length)];
+    const popup = document.createElement('div');
+    popup.id = 'popup';
+    popup.style.position = 'fixed';
+    popup.style.top = `${Math.random() * 90 - 10}%`;
+    popup.style.left = `${Math.random() * 90 - 10}%`;
+    popup.style.zIndex = 1000;
+    const img = new Image();
+    img.src = `./images/${randomImage}`;
+    img.onload = () => {
+        const scale = 0.5; // Adjust the scale as needed
+        popup.style.width = img.width * scale + 'px';
+        popup.style.height = img.height * scale + 'px';
+    };
+    popup.style.backgroundImage = `url('./images/${randomImage}')`;
+    popup.style.backgroundSize = 'cover';
+    popup.style.border = '5px solid grey';
+    document.body.appendChild(popup);
+}
+function tempChange() {
+    if (Math.abs(temp - initialTemp) > 40) {
+        const popup = document.getElementById('popup');
+        if (popup) {
+            popup.remove();
+        }
+        initialTemp = temp;
+    }
+}
 
