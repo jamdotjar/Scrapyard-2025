@@ -247,6 +247,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (siteArea) {
                 siteArea.style.opacity = countdown / MAX_COUNTDOWN;
             }
+
+            if (countdown = 0) {
+                // refresh
+                alert('You have been inactive for too long. Refreshing the page.');
+                window.location.reload();
+            }
         }
         , 10)
     setInterval(tempChange, 1000);
@@ -282,7 +288,7 @@ function showRandomPopup() {
     const img = new Image();
     img.src = `/images/${randomImage}`;
     img.onload = () => {
-        const scale = 0.3; // Adjusted scale to make images larger
+        const scale = 0.4; // Adjusted scale to make images larger
         popup.style.width = img.width * scale + 'px';
         popup.style.height = img.height * scale + 'px';
     };
