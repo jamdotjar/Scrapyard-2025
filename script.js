@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 siteArea.style.opacity = countdown / MAX_COUNTDOWN;
             }
 
-            if (countdown = 0) {
+            if (countdown == 0) {
                 // refresh
                 alert('You have been inactive for too long. Refreshing the page.');
                 window.location.reload();
