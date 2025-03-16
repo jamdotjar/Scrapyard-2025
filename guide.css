@@ -1,0 +1,56 @@
+body {
+    background-image: url(https://static.vecteezy.com/system/resources/thumbnails/001/914/463/small/virtual-retro-future-environment-concept-free-vector.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+h1,
+ol,
+li {
+    color: white;
+    text-align: center;
+}
+
+img {
+    width: 30%;
+}
+
+ol,
+li {
+    font-size: 20px;
+}
+
+h1 {
+    font-size: 90px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    animation: glitch 1s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        text-shadow: 2px 2px red, -2px -2px blue;
+    }
+
+    25% {
+        text-shadow: -2px -2px red, 2px 2px blue;
+    }
+
+    50% {
+        text-shadow: 2px -2px red, -2px 2px blue;
+    }
+
+    75% {
+        text-shadow: -2px 2px red, 2px -2px blue;
+    }
+
+    100% {
+        text-shadow: 2px 2px red, -2px -2px blue;
+    }
+}

@@ -173,6 +173,11 @@ function exponentialBackoff(max, delay, toTry, success, fail) {
         });
 }
 
+function time(text) {
+    log('[' + new Date().toJSON().substr(11, 8) + '] ' + text);
+}
+
+
 
 function poll() {
     liveID = BT_UUID_SVC_BULK_DATA + BT_UUID_CHAR_BLE_BULK_LIVE_DATA;
@@ -213,8 +218,13 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(
         function () {
             if (!connected) return;
-            if (last_move < 5) {
-                countdown = Math.min(MAX_COUNTDOWN, countdown + Math.random() * 0.05);
+            if (last_move < 3) {
+                increase = Math.random() * 0.05;
+                if (countdown > 95) {
+                    growSite(0.5);
+                }
+                countdown = Math.min(MAX_COUNTDOWN, countdown + increase);
+
             } else {
                 countdown = Math.max(0, countdown - 0.1);
             }
@@ -232,8 +242,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 countdownElement.textContent = countdown.toFixed(1);
             }
-
             const siteArea = document.getElementById('site');
+
             if (siteArea) {
                 siteArea.style.opacity = countdown / MAX_COUNTDOWN;
             }
@@ -241,9 +251,11 @@ document.addEventListener('DOMContentLoaded', function () {
         , 10)
     setInterval(tempChange, 1000);
 
+    setInterval(disableSite, 1000);
+
     setInterval(() => {
         showRandomPopup();
-    }, 15000);
+    }, 9000);
 
 
     // Setup event listeners
@@ -264,18 +276,19 @@ function showRandomPopup() {
     const popup = document.createElement('div');
     popup.id = 'popup';
     popup.style.position = 'fixed';
-    popup.style.top = `${Math.random() * 90 - 10}%`;
-    popup.style.left = `${Math.random() * 90 - 10}%`;
+    popup.style.top = `${Math.random() * 90}%`;
+    popup.style.left = `${Math.random() * 90}%`;
     popup.style.zIndex = 1000;
     const img = new Image();
-    img.src = `./images/${randomImage}`;
+    img.src = `/images/${randomImage}`;
     img.onload = () => {
-        const scale = 0.5; // Adjust the scale as needed
+        const scale = 0.3; // Adjusted scale to make images larger
         popup.style.width = img.width * scale + 'px';
         popup.style.height = img.height * scale + 'px';
     };
-    popup.style.backgroundImage = `url('./images/${randomImage}')`;
-    popup.style.backgroundSize = 'cover';
+    popup.style.backgroundImage = `url('/images/${randomImage}')`;
+    popup.style.backgroundSize = 'contain';
+    popup.style.backgroundRepeat = 'no-repeat';
     popup.style.border = '5px solid grey';
     document.body.appendChild(popup);
 }
@@ -287,4 +300,18 @@ function tempChange() {
         }
         initialTemp = temp;
     }
+}
+function disableSite() {
+    const contentDiv = document.getElementById('content');
+    if (contentDiv) {
+        contentDiv.style.display = disable ? 'none' : 'block';
+    }
+}
+function growSite(num) {
+    const siteArea = document.getElementById('site');
+    if (!siteArea) {
+        return
+    }
+    const height = siteArea.clientHeight + num;
+    siteArea.style.height = `${height}px`;
 }

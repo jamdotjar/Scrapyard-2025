@@ -213,6 +213,8 @@ a:hover {
     flex-direction: column;
     background-color: white;
     padding: 20px;
+    height: 100px;
+    overflow: hidden;
 }
 
 .site>* {
@@ -224,6 +226,7 @@ a:hover {
     background-color: white;
     color: #000000;
     font-size: 15px;
+
 }
 
 .outline {
